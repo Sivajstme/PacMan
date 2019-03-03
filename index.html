@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Pacman</title>
+    <style type="text/css">
+        html * {
+            padding: 0;
+            margin: 0;
+        }
+
+        body {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 50px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+        }
+
+        input {
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            outline: none;
+            width: 300px;
+            border: solid 1px black;
+            color: white;
+            background: black;
+        }
+
+        #console {
+            width: 100%;
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+    </style>
+    <script type="text/javascript">
+        // Initialize grid properties
+        const GRID_ROWS = 5;
+        const GRID_COLS = 5;
+
+        // Set pacman to be located at coordinates 0,0 located at SOUTH_WEST of the grid
+        let pacmanRow = 0;
+        let pacmanCol = 0;
+        let pacmanDirection = "NORTH";
+
+        // Print the text to the console
+        let print = (text) => {
+            let p = document.createElement("p");
+            p.appendChild(document.createTextNode(text));
+            document.getElementById("console").appendChild(p);
+        }
+
+        // Parse the entered command and do necessary display
+        let =  parseCommand = (event) => {
+            event.preventDefault();
+
+            // Proceed only when the "ENTER" key is pressed
+            if (event.keyCode != 13)
+                return;
+                    //    0,1,north
+            let commandLine = document.getElementById("command").value;
+            let command = commandLine.substring(0, commandLine.indexOf(" "));
+            let commandArguments = commandLine.substring(commandLine.indexOf(" "));
+
+            if (command == "")
+                command = commandLine;
+
+            command = command.toUpperCase();
+
+            if (command == "PLACE" && commandArguments != "") {
+                // Extract the locations
+                //Exp : Place 0,4,north
+                commandTokens = commandArguments.split(",");
+
+                if (commandTokens.length != 3) {
+                    print("Invalid command.");
+                    return;
+                }
+
+                let col = eval(commandTokens[0].trim());
+                let row = eval(commandTokens[1].trim());
+                let direction = commandTokens[2].trim().toUpperCase();
+
+                // Validate location
+                if (col < 0 || col >= GRID_COLS || row < 0 || row >= GRID_ROWS) {
+                    print("Invalid coordinates.");
+                    return;
+                }
+
+                // Validate direction
+                if (direction != "NORTH" && direction != "EAST" && direction != "WEST" && direction != "SOUTH") {
+                    print("Invalid direction.");
+                    return;
+                }
+
+                // Place pacman
+                pacmanRow = row;
+                pacmanCol = col;
+                packmanDirection = direction;
+
+                print("Command accepted.");
+            } else if (command == "MOVE") {
+                // Move pacman forward depending on direction
+                if (pacmanDirection == "NORTH" && pacmanRow + 1 < GRID_ROWS) {
+                    pacmanRow++;
+                } else if (pacmanDirection == "SOUTH" && packmanRow - 1 >= 0) {
+                    pacmanRow--;
+                } else if (pacmanDirection == "WEST" && pacmanCol - 1 >= 0) {
+                    pacmanCol--;
+                } else if (pacmanDirection == "EAST" && pacmanCol + 1 < GRID_COLS) {
+                    pacmanCol++;
+                }
+
+                print("Command accepted.");
+            } else if (command == "LEFT") {
+                // Turn to the left
+                if (pacmanDirection == "NORTH") {
+                    pacmanDirection = "WEST";
+                } else if (pacmanDirection == "WEST") {
+                    pacmanDirection = "SOUTH";
+                } else if (pacmanDirection == "SOUTH") {
+                    pacmanDirection = "EAST";
+                } else if (pacmanDirection == "EAST") {
+                    pacmanDirection = "NORTH";
+                }
+
+                print("Command accepted.");
+            } else if (command == "RIGHT") {
+                // Turn to the right
+                if (pacmanDirection == "NORTH") {
+                    pacmanDirection = "EAST";
+                } else if (pacmanDirection == "EAST") {
+                    pacmanDirection = "SOUTH";
+                } else if (pacmanDirection == "SOUTH") {
+                    pacmanDirection = "WEST";
+                } else if (pacmanDirection == "WEST") {
+                    pacmanDirection = "NORTH";
+                }
+
+                print("Command accepted.");
+            } else if (command == "REPORT") {
+                // Print out pacman's current state
+                print("Pacman at (" + pacmanCol + ", " + pacmanRow + ") facing " + pacmanDirection);
+            } else {
+                print("Invalid command.");
+            }
+
+            document.getElementById("command").value = "";
+        }
+    </script>
+</head>
+
+<body>
+    <input type="text" id="command" placeholder="Enter command..." onkeyup="parseCommand(event)" />
+    <br /><br />
+    <div id="console">
+        <p>Pacman at (0, 0) facing NORTH</p>
+    </div>
+</body>
+
+</html>
